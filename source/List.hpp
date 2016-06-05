@@ -145,12 +145,12 @@ class List{
 		}
 	}
 
-	List(List&& mvlst):
-	m_first{mvlst.m_first},m_last{mvlst.m_last},m_size{mvlst.m_size}{
+	List(List&& listmove):
+	m_first{listmove.m_first},m_last{listmove.m_last},m_size{listmove.m_size}{
 
-		mvlst.m_first = nullptr;
-		mvlst.m_last = nullptr;
-		mvlst.m_size = 0;
+		listmove.m_first = nullptr;
+		listmove.m_last = nullptr;
+		listmove.m_size = 0;
 	}
 
 	~List(){

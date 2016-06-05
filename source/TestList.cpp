@@ -31,9 +31,17 @@ TEST_CASE("add an element with push_front", "[modifiers]"){
 	list.push_front(42);
 	REQUIRE(42 == list.front());
 
-	list.push_front(69);
-	list.push_front(33);
-	REQUIRE(33 == list.front());
+	List<int> list2;
+	list2.push_front(69);
+	list2.push_front(33);
+	REQUIRE(33 == list2.front());
+
+	List<int> list3;
+	list3.push_front(56);
+	list3.push_front(44);
+	list3.push_front(23);
+	list3.push_front(96);
+	REQUIRE(96 == list3.front());
 	
 }
 
@@ -44,9 +52,12 @@ TEST_CASE("add an element with push_back", "[modifiers]"){
 	list.push_back(42);
 	REQUIRE(42 == list.back());
 
-	list.push_back(69);
-	list.push_back(33);
-	REQUIRE(33 == list.back());
+	List<int> list2;
+	list2.push_back(69);
+	list2.push_back(33);
+	REQUIRE(33 == list2.back());
+
+
 
 	
 }
@@ -106,6 +117,37 @@ TEST_CASE("provide acces to the first element with begin","[iterators]"){
 	REQUIRE( 42 == *list.begin());
 }
 
+TEST_CASE("equal or not","[equal]"){
+
+	
+	List<int> list3;
+	list3.push_front(42);
+	list3.push_front(69);
+	list3.push_front(404);
+
+	List <int> list4;
+	list4.push_front(42);
+	list4.push_front(69);
+	list4.push_front(404);
+	REQUIRE(list3 == list4);
+
+}
+
+TEST_CASE("different or not","[different or not]"){
+
+	List<int> list;
+	list.push_front(42);
+	list.push_front(69);
+	list.push_front(404);
+
+	List <int> list2;
+	list2.push_front(42);
+	list2.push_front(6);
+	list2.push_front(404);
+	REQUIRE(list3 != list4);
+
+}
+
 TEST_CASE("copy constructor","[constructor]"){
 
 	List<int> list;
@@ -116,20 +158,9 @@ TEST_CASE("copy constructor","[constructor]"){
 	List<int> list2{list};
 	REQUIRE(list == list2);
 
+
 }
 
-TEST_CASE("move constructor","[constructor]"){
-
-	List<int> list;
-	list.push_front(1);
-	list.push_front(2);
-	list.push_front(3);
-	list.push_front(4);
-	List<int> list2(std::move(list));
-	REQUIRE( 0 == list.size());
-	REQUIRE(list.empty());
-	REQUIRE(4 == list2.size());
-}
 
 TEST_CASE("insert","[insert]"){
 
@@ -151,7 +182,7 @@ TEST_CASE("insert","[insert]"){
 	REQUIRE(*list.begin() == 6);
 }
 
-TEST_CASE("reverses the sequence of the list", "[aufgabe4.9]") {
+TEST_CASE("reverses the sequence of the list", "[reverse]") {
    
   List<int> list; 
   list.push_back(1); 
@@ -159,8 +190,12 @@ TEST_CASE("reverses the sequence of the list", "[aufgabe4.9]") {
   list.push_back(3); 
   list.push_back(4); 
   list.push_back(5);
+  list.push_back(6);
+
   list.reverse();
   ListIterator<int> i = list.begin();
+  REQUIRE(6 == *i);
+  ++i;
   REQUIRE(5 == *i);
   ++i;
   REQUIRE(4 == *i);
@@ -173,6 +208,8 @@ TEST_CASE("reverses the sequence of the list", "[aufgabe4.9]") {
 
   reverse(list);
   ListIterator<int> it = list.begin();
+  REQUIRE(6 == *it);
+  ++it;
   REQUIRE(5 == *it);
   ++it;
   REQUIRE(4 == *it);
@@ -184,6 +221,20 @@ TEST_CASE("reverses the sequence of the list", "[aufgabe4.9]") {
   REQUIRE(1 == *it);
 
 
+}
+
+
+TEST_CASE("move constructor","[constructor]"){
+
+	List<int> list;
+	list.push_front(1);
+	list.push_front(2);
+	list.push_front(3);
+	list.push_front(4);
+	List<int> list2(std::move(list));
+	REQUIRE( 0 == list.size());
+	REQUIRE(list.empty());
+	REQUIRE(4 == list2.size());
 }
 
 int main(int argc, char *argv[]){
