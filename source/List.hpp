@@ -31,10 +31,76 @@ struct ListNode{
 template <typename T>
 struct ListIterator{
 
+	typedef ListIterator<T> Self;
+
+	typedef T value_type;
+	typedef T* pointer;
+	typedef T& reference;
+	typedef ptrdiff_t difference_type;
+	typedef std::forward_iterator_tag iterator_category;
+
 	friend class List<T>; //friend darf auf Member zugreifen 
-	//not implemented yet
+	
+	ListIterator() : m_node(nullptr){} 
+	ListIterator(ListNode<T>* n) : m_node(n){} 
+
+	reference operator*() const {
+		
+		return m_node -> m_value;
+	} 
+
+	pointer operator->() const {
+		
+		return &(m_node ->m_value); //gibt die Afresse von m_value zurueck
+	}
+
+	Self& operator++() const {
+
+		if(m_node){
+		m_node = m_node -> m_next;
+		}
+
+		return *this;
+
+	} 
+
+	Self operator++(int) {
+
+		ListIterator tmp(*this); //gibt aktuellen Wert zurueck vor erhoehen
+		if(m_node){
+		m_node = m_node -> m_next;
+		}
+
+		return tmp;
+	}
+
+	bool operator==(const Self& x) const {
+
+		return m_node == x.m_node;
+	}
+
+	bool operator!=(const Self& x) const {
+
+		return m_node != x.m_node;
+
+	} 
+
+	Self next () const{
+		if(m_node)
+			return ListIterator(m_node -> m_next);
+		else
+			return ListIterator(nullptr);
+	}
+
+	Self prev() const{
+		if(m_node)
+			return ListIterator(m_node -> m_prev);
+		else
+			return ListIterator(nullptr);
+	}
 
  private:
+ 	//The Node the iterator is pointing to
 	ListNode<T>* m_node = nullptr;
 };
 
@@ -68,6 +134,29 @@ class List{
 	m_first{nullptr},
 	m_last{nullptr} {} 
 
+	List(List<T> const& copy): 
+	m_size{0},
+	m_first{nullptr},
+	m_last{nullptr}{
+
+		for(auto i = copy.begin(); i != copy.end(); i++){
+
+			push_back(*i);
+		}
+	}
+
+	List(List&& mvlst):
+	m_first{mvlst.m_first},m_last{mvlst.m_last},m_size{mvlst.m_size}{
+
+		mvlst.m_first = nullptr;
+		mvlst.m_last = nullptr;
+		mvlst.m_size = 0;
+	}
+
+	~List(){
+		clear();
+	}
+
 	bool empty() const{
 
 		return m_size == 0;
@@ -91,6 +180,36 @@ class List{
 
 	T& back(){
 		return m_last->m_value;
+	}
+
+	void insert(T const& a, iterator const& p){
+
+		iterator i = begin();
+		while(i != p) i++;
+
+		T temp = *i;
+		*i = a;
+		i++;
+
+		while(i!=end()){
+
+			T temp2 = *i;
+			*i = temp;
+			temp = temp2;
+			i++;
+
+		}
+
+		push_back(temp);
+	}
+
+	void reverse(){
+
+		List<T> rev{*this}; //copy der liste
+		clear(); //macht ganze Liste leer 
+		for(iterator i = rev.begin(); i!=rev.end(); ++i){
+			push_front(*i);
+		}
 	}
 
 	void push_front(T const& p){
@@ -163,10 +282,21 @@ class List{
 
 	void clear(){
 
-		for(int i = 0; i <= m_size; ++i){
-			
+		while(m_size > 0){
+			pop_front();
 		}
 
+	}
+
+	iterator begin() const{
+
+		iterator begi{m_first};
+		return begi; 
+	}
+
+	iterator end() const{
+
+		return ListIterator<T>{};
 	}
 
  private:
@@ -174,6 +304,38 @@ class List{
 	ListNode<T>* m_first = nullptr;
 	ListNode<T>* m_last = nullptr;
 };
+
+template<typename T>
+bool operator == (List<T> const& xs, List<T> const& ys){
+	
+	if(xs.size() != ys.size()){ //ueberprueft ob gleich groß
+		return false;
+	}
+
+	else{
+
+		ListIterator<T> x = xs.begin(); 
+		ListIterator<T> y = ys.begin();
+
+		while(x != xs.end() and y!=ys.end()){
+
+			if(*x != *y){
+				return false;
+			}
+
+			x++;
+			y++;
+		}
+
+	return true;
+	}
+}
+
+template<typename T>
+bool operator != (List<T> const& xs, List<T> const& ys){
+
+	return !(xs == ys);
+}
 
 #endif 
 //#define BUW_LIST_HPP
