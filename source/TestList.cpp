@@ -171,17 +171,18 @@ TEST_CASE("reverses the sequence of the list", "[aufgabe4.9]") {
   ++i; 
   REQUIRE(1 == *i);
 
-  /*reverse(list);
-  ListIterator<int> i = list.begin();
-  REQUIRE(5 == *i);
-  ++i;
-  REQUIRE(4 == *i);
-  ++i; 
-  REQUIRE(3 == *i);
-  ++i;
-  REQUIRE(2 == *i);
-  ++i; 
-  REQUIRE(1 == *i);*/
+  reverse(list);
+  ListIterator<int> it = list.begin();
+  REQUIRE(5 == *it);
+  ++it;
+  REQUIRE(4 == *it);
+  ++it; 
+  REQUIRE(3 == *it);
+  ++it;
+  REQUIRE(2 == *it);
+  ++it; 
+  REQUIRE(1 == *it);
+
 
 }
 

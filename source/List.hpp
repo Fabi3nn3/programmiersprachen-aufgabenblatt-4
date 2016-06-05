@@ -54,7 +54,7 @@ struct ListIterator{
 		return &(m_node ->m_value); //gibt die Afresse von m_value zurueck
 	}
 
-	Self& operator++() const {
+	Self& operator++() {
 
 		if(m_node){
 		m_node = m_node -> m_next;
